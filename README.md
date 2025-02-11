@@ -13,5 +13,9 @@ At the outset, the development environments consisted of
 MacOS 13.7.3,  Python 3.12.2, OpenCV 4.0.0
 
 # Starting demos:
+ For all demos, see +Mod10-VIs for full collection
 quantize
+sample
+morphology
+differencing
 
