@@ -1,0 +1,3 @@
+This project is an effort to approximately replace the LabView implementaion
+of SIVA DIP at live.ece.utexas.edu with fully open source code written in
+Python using Tkinter and OpenCV.
