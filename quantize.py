@@ -87,6 +87,7 @@ class Application(tk.Tk):
         cv2.imshow('Original', self.img)
         cv2.imshow('Processed', self.img_proc)
     
+        
     def stopProc(self):
         cv2.destroyWindow('Processed')
         cv2.destroyWindow('Original')
@@ -117,8 +118,10 @@ class Application(tk.Tk):
         pb = self.pb.get()
         num_levels = 2 ** pb
         levels = np.arange(0, 256, 256 // num_levels)
-        bins = np.digitize(self.img, levels, right=True)
-        self.img_proc = (levels[bins - 1]).astype(np.uint8)
+        levels = np.append(levels, 255)
+        print('levels = ', levels)
+        bins = np.digitize(self.img, levels, right=False)
+        self.img_proc = (levels[bins]).astype(np.uint8)
         
         cv2.imshow('Processed',self.img_proc)
     
