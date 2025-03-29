@@ -38,7 +38,8 @@ class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.started = False
-        self.title('Quantize Demo')
+        self.img = None
+        self.title('Sample Demo')
            
         # Data linkages to controls
         self.lbl1_txt = tk.StringVar()
@@ -48,27 +49,28 @@ class Application(tk.Tk):
         self.zf.trace_add("write", self.updateSize)
     
         self.lbl2_txt = tk.StringVar()
-        self.lbl2_txt.set('Number of Bits')
-        self.pb = tk.IntVar()
-        self.pb.set(8)
-        self.pb.trace_add("write", self.updateBits)
+        self.lbl2_txt.set('Image')
+
+        self.samples = tk.StringVar(value = '256x256')
+        self.samples.trace_add("write", self.updateSamples)
         
        # Controls
         tk.Spinbox(self,
                    from_=1.0, to=2.0, increment=0.1,
-                   textvariable=self.zf).grid(row = 0,  column = 0)
-        tk.Label(self, textvariable = self.lbl1_txt).grid(row = 0, column = 1)
+                   textvariable=self.zf).grid(row = 0,  column = 0, sticky = 'nwes')
+        tk.Label(self, textvariable = 
+                              self.lbl1_txt).grid(row = 0, column = 1)
         tk.Spinbox(self,
-                   from_=1, to=8, increment=1,
-                   textvariable = self.pb).grid(row = 1, column = 0)
+                   values = ['256x256', '128x128', '64x64', '32x32']
+                   textvariable = self.samples).grid(row = 1, column = 0, sticky = 'nwes')
         tk.Label(self, textvariable=self.lbl2_txt).grid(row = 1, column = 1)
         
         tk.Button(self, text = "Read Image", 
-                  command = self.loadImage).grid(row = 2, column = 0)
+                  command = self.loadImage).grid(row = 2, column = 0, sticky = 'nwes')
         tk.Button(self, text = "Start", 
-                  command = self.startProc).grid(row = 3, column = 0)
+                  command = self.startProc).grid(row = 3, column = 0, sticky = 'nwes')
         tk.Button(self, text = "Stop", 
-                  command = self.stopProc).grid(row = 4, column = 0)
+                  command = self.stopProc).grid(row = 4, column = 0, sticky = 'nwes')
       
         
     def loadImage(self):
@@ -79,19 +81,20 @@ class Application(tk.Tk):
                                ("Image Files", "*.tif"),
                                ("All files", "*.*")))
         self.img = cv2.imread(file_path)
-        self.img_proc = self.img.copy()
+        self.img_proc = self.img.clone()
  
     
-    def startProc(self): 
-        self.started = True
-        cv2.imshow('Original', self.img)
-        cv2.imshow('Processed', self.img_proc)
+    def startProc(self):
+        if self.img is not None:
+            self.started = True
+            cv2.imshow('Original', self.img)
+            cv2.imshow('Processed', self.img_proc)
     
         
     def stopProc(self):
-        cv2.destroyWindow('Processed')
-        cv2.destroyWindow('Original')
-        sys.exit(0)
+        if self.started:
+            cv2.destroyAllWindows()
+            sys.exit(0) 
 
     def updateSize(self, name, index, mode):
         if not self.started:
@@ -110,19 +113,18 @@ class Application(tk.Tk):
         cv2.imshow('Original', self.img)
 
 
-    def updateBits(self, name, index, mode):
+    def updateSamples(self, name, index, mode):
         if not self.started:
             return
         
         # Reference: Google('opencv grayscale quantize')
-        pb = self.pb.get()
-        num_levels = 2 ** pb
-        levels = np.arange(0, 256, 256 // num_levels)
-        levels = np.append(levels, 255)
-        print('levels = ', levels)
-        bins = np.digitize(self.img, levels, right=False)
-        self.img_proc = (levels[bins]).astype(np.uint8)
-        
+        str = self.samples.get()
+        # parse the substring AFTER the 'x'
+        ndx = 1 + str.find('x')
+        samples = int(str[ndx:])
+        self.img_proc = self.img.clone()
+        print(f'{samples}x{samples}')
+        cv2.resize(self.img_proc, (samples, samples))
         cv2.imshow('Processed',self.img_proc)
     
     
