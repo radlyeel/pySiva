@@ -3,36 +3,18 @@
 # -*- coding: utf-8 -*-
 '''
 Created on Feb 12 2025
-As part of ECE533
+As part of ECE533 @ UNM Spring Semester 2025
 @author: Daryl Lee
 
-
-Some (most?) of the OOP GUI ideas come from 
-      
-Moore, Alan D.. Python GUI # Programming with Tkinter: Design and build functional and user-friendly GUI applications, 2nd Edition (p. 97). (Function). Kindle Edition. 
-
-The occasonal comments like "# [Moore] pg NN" are
-page references to that text.
 '''
 
 import tkinter as tk
 from tkinter import filedialog
 import cv2
 import sys
+import os
 import numpy as np
 
-'''
-# [Moore] pg 94ff
-class LabelInput(tk.Frame):
-  """A label and input combined together"""
-    def __init__(self, parent, label, inp_cls, inp_args, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
-        self.label = tk.Label(self, text=label, anchor='w')
-        self.input = inp_cls(self, **inp_args)
-        self.columnconfigure(1, weight=1)
-        self.label.grid(sticky=tk.E + tk.W)
-        self.input.grid(row=0, column=1, sticky=tk.E + tk.W)
-'''
 
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -74,14 +56,17 @@ class Application(tk.Tk):
       
         
     def loadImage(self):
+        # Use environment variable SIVA_IMAGES_PATH if it exists, else default to '.'
+        images_at = os.getenv("SIVA_IMAGES_PATH", default=".")
         file_path = filedialog.askopenfilename(
-                           initialdir=".", 
+                           initialdir=images_at, 
                            title="Select a file",
                            filetypes=(
                                ("Image Files", "*.tif"),
                                ("All files", "*.*")))
         self.img = cv2.imread(file_path)
-        self.img_proc = self.img.copy()
+        if self.img is not None:
+            self.img_proc = self.img.copy()
  
     
     def startProc(self):

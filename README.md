@@ -1,9 +1,13 @@
 # PySiva
 
 ## Description
-For a solid introduction to Digital Image Prceossing, see
+For a solid introduction to Digital Image Processing, see
 live.ece.utexas.edu/class/siva/default.htm.  Clicking the "SIVA DIP" tab takes
-you to live.ece.utexas.edu/class/siva/siva_dip.htm, the demo gllery, a rich suite of "live" demos.  Thse demos are written as Labview "VI"s, which is a problem for thoe without Labiew and/or IMAQ.  Compiled Windows executables, but for MacOS and Linux users, there seems to be no access.
+you to live.ece.utexas.edu/class/siva/siva_dip.htm, the demo gllery, a rich
+suite of "live" demos.  Thse demos are written as Labview VIs, which is a
+problem for those without Labview and/or the Labview moduleIMAQ.  Compiled
+Windows executables are available, but for MacOS and Linux users there seems to
+be no access.   
 
 Yhe intent of PySiva is to bridge that gap by implementing selected demos in Python with OpenCV anf Tkinter.
 
